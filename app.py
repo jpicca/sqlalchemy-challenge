@@ -44,6 +44,7 @@ def welcome():
         
     )
 
+# Precipitation page
 @app.route("/api/v1.0/precipitation")
 def precip():
 
@@ -51,7 +52,7 @@ def precip():
     session = Session(engine)
 
     # Calculate the date 1 year ago from the last data point in the database
-    lastDayOfData = session.query(Measurement.date).order_by(Measurement.date.desc()).limit(1).all()[0][0]
+    lastDayOfData = session.query(Measurement.date).order_by(Measurement.date.desc()).limit(1).scalar() #.all()[0][0]
     oneYearAgo = dt.datetime.strptime(lastDayOfData, '%Y-%m-%d')-dt.timedelta(days=366)
     dateQuery = dt.datetime.strftime(oneYearAgo,'%Y-%m-%d')
 
@@ -70,6 +71,7 @@ def precip():
 
     return jsonify(all_obs)
 
+# Station page
 @app.route("/api/v1.0/stations")
 def stations():
 
@@ -91,6 +93,7 @@ def stations():
 
     return jsonify(all_stations)
 
+# Last year's temperature observations
 @app.route("/api/v1.0/tobs")
 def temps():
 
@@ -98,7 +101,7 @@ def temps():
     session = Session(engine)
 
     # Calculate the date 1 year ago from the last data point in the database
-    lastDayOfData = session.query(Measurement.date).order_by(Measurement.date.desc()).limit(1).all()[0][0]
+    lastDayOfData = session.query(Measurement.date).order_by(Measurement.date.desc()).limit(1).scalar()
     oneYearAgo = dt.datetime.strptime(lastDayOfData, '%Y-%m-%d')-dt.timedelta(days=366)
     dateQuery = dt.datetime.strftime(oneYearAgo,'%Y-%m-%d')
 
@@ -118,6 +121,7 @@ def temps():
 
     return jsonify(all_tobs)
 
+# Average since start date
 @app.route("/api/v1.0/<start>")
 def tempCalc(start):
 
@@ -136,6 +140,7 @@ def tempCalc(start):
 
     return jsonify(statDict)
 
+# Average between two dates
 @app.route("/api/v1.0/<start>/<end>")
 def tempCalcRange(start,end):
 
